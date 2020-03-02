@@ -1,0 +1,66 @@
+# OSX
+#
+.DS_Store
+
+# Xcode
+#
+build/
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+xcuserdata
+*.xccheckout
+*.moved-aside
+DerivedData
+*.hmap
+*.ipa
+*.dSYM.zip
+*.xcuserstate
+project.xcworkspace
+
+# CocoaPods
+/ios/Pods/
+
+# Android/IntelliJ
+#
+build/
+.idea
+.gradle
+.project
+local.properties
+*.iml
+.classpath
+.settings/
+
+
+# Visual Studio Code
+#
+.vscode/
+
+# node.js
+#
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# BUCK
+buck-out/
+\.buckd/
+*.keystore
+
+# Bundle artifact
+*.jsbundle
+
+.jest
+
+# Android Keystore
+android/keystores/kollex.keystore
+android/keystores/kollex.properties
+
+# Vendored Gems
+vendor/
