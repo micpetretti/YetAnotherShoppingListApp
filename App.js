@@ -1,33 +1,35 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from "react";
 import {
   SafeAreaView,
+  View,
   StyleSheet,
   Text,
   StatusBar,
   TouchableOpacity,
-  FlatList,
-} from 'react-native';
-import {LISTS_TABLE, ITEMS_TABLE} from './model/schema';
-import {Database} from '@nozbe/watermelondb';
-import SQLiteAdapter from '@nozbe/watermelondb/adapters/sqlite';
+  FlatList
+} from "react-native";
+import { LISTS_TABLE, ITEMS_TABLE } from "./model/schema";
+import { Database } from "@nozbe/watermelondb";
+import SQLiteAdapter from "@nozbe/watermelondb/adapters/sqlite";
 
-import schema from './model/schema';
-import Lists from './model/Lists';
-import Items from './model/Items';
-import {ListItem} from './src/Components';
+import schema from "./model/schema";
+import Lists from "./model/Lists";
+import Items from "./model/Items";
+import { ListItem } from "./src/Components";
+import { listsSync } from "./sync/ListsSync";
 
 const getRandomNumber = () => Math.floor(Math.random() * 100);
 
 // First, create the adapter to the underlying database:
 const adapter = new SQLiteAdapter({
-  schema,
+  schema
 });
 
 // Then, make a Watermelon database from it!
 const database = new Database({
   adapter,
   modelClasses: [Lists, Items],
-  actionsEnabled: true,
+  actionsEnabled: true
 });
 
 const makeRandomList = async () => {
@@ -72,7 +74,7 @@ const ShoppingLists = () => {
 
   useEffect(() => {
     const listsCollection = database.collections.get(LISTS_TABLE);
-    const observable = listsCollection.query().observeWithColumns('name');
+    const observable = listsCollection.query().observeWithColumns("name");
     if (!observable || !observable.subscribe) {
       return;
     }
@@ -83,7 +85,7 @@ const ShoppingLists = () => {
   return (
     <FlatList
       data={lists}
-      renderItem={({item}) => (
+      renderItem={({ item }) => (
         <ListItem
           name={item.name}
           items={item.items}
@@ -102,10 +104,18 @@ const App = () => {
     <>
       <StatusBar barStyle="dark-content" />
       <SafeAreaView style={styles.flexOne}>
-        <Text style={styles.header}>{'My Lists'}</Text>
+        <View style={styles.header}>
+          <Text style={styles.headerText}>{"My Lists"}</Text>
+          <TouchableOpacity
+            style={styles.syncButton}
+            onPress={() => listsSync(database)}
+          >
+            <Text style={styles.addListButtonText}>{"sync"}</Text>
+          </TouchableOpacity>
+        </View>
         <ShoppingLists />
         <TouchableOpacity style={styles.addListButton} onPress={makeRandomList}>
-          <Text style={styles.addListButtonText}>{'+ New List'}</Text>
+          <Text style={styles.addListButtonText}>{"+ New List"}</Text>
         </TouchableOpacity>
       </SafeAreaView>
     </>
@@ -113,22 +123,34 @@ const App = () => {
 };
 
 const styles = StyleSheet.create({
-  flexOne: {flex: 1},
-  header: {padding: 32, fontSize: 32},
+  flexOne: { flex: 1 },
+  headerText: { padding: 32, fontSize: 32 },
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center"
+  },
   addListButton: {
-    position: 'absolute',
+    position: "absolute",
     left: 32,
     right: 32,
     bottom: 32,
-    backgroundColor: 'black',
+    backgroundColor: "black",
     borderRadius: 99,
-    alignItems: 'center',
-    padding: 8,
+    alignItems: "center",
+    padding: 8
   },
   addListButtonText: {
-    color: 'white',
-    fontSize: 16,
+    color: "white",
+    fontSize: 16
   },
+  syncButton: {
+    backgroundColor: "black",
+    borderRadius: 99,
+    alignItems: "center",
+    padding: 8,
+    marginRight: 16
+  }
 });
 
 export default App;
